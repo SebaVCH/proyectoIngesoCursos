@@ -1,0 +1,25 @@
+type Curso {
+  courseID: ID!
+  instructorID: ID!
+  title: String!
+  description: String!
+  price: Float!
+  category: String!
+  instructor: Usuario!
+}
+
+type Usuario {
+  userID: ID!
+  name: String!
+  username: String!
+  email: String!
+}
+
+type Query {
+  cursos: [Curso!]!
+  curso(courseID: ID!): Curso
+}
+
+type Mutation {
+  createCurso(instructorID: ID!, title: String!, description: String!, price: Float!, category: String!): Curso!
+}
