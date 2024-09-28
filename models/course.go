@@ -1,12 +1,10 @@
 package models
 
 type Curso struct {
-	CourseID     string  `gorm:"primaryKey;type:text" json:"courseID"`
-	InstructorID string  `gorm:"not null;type:text" json:"instructorID"`
-	Title        string  `json:"title"`
-	Description  string  `json:"description"`
-	Price        float64 `json:"price"`
-	Category     string  `json:"category"`
-
-	Instructor Usuario `gorm:"foreignKey:InstructorID"`
+	CourseID     uint    `gorm:"primaryKey;autoIncrement" json:"courseID"` // Cambiado a `uint` y agregado `autoIncrement`
+	InstructorID string  `gorm:"type:text" json:"instructorID"`
+	Title        string  `gorm:"type:text" json:"title"`
+	Description  string  `gorm:"type:text" json:"description"`
+	Price        float64 `gorm:"type:float" json:"price"`
+	Category     string  `gorm:"type:text" json:"category"`
 }

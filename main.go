@@ -24,17 +24,17 @@ func init() {
 	}
 
 	// Migrar el esquema de Curso y Usuario
-	err = bd.AutoMigrate(&models.Curso{}, &models.Usuario{})
+	err = bd.AutoMigrate(&models.Curso{})
 	if err != nil {
 		log.Fatal("Error al migrar la base de datos", err)
 	}
 }
 
 func main() {
-	// Configurar el resolver con la base de datos
+	// Resolver
 	resolver := graph.Resolver{DB: bd}
 
-	// Crear el servidor GraphQL
+	// Servidor GraphQL
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &resolver}))
 
 	// Middleware CORS
@@ -43,13 +43,12 @@ func main() {
 		AllowCredentials: true,
 	}).Handler(srv)
 
-	// Configurar las rutas
 	http.Handle("/graphql", corsHandler)
-	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
+	http.Handle("/playground", playground.Handler("GraphQL Playground", "/graphql"))
 
-	// Iniciar el servidor
-	log.Println("Server running at http://localhost:8080/playground")
-	err := http.ListenAndServe(":8080", nil)
+	log.Println("Iniciando servidor en :8081...")
+
+	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		log.Fatalf("No se pudo iniciar el servidor: %s\n", err)
 	}

@@ -2,8 +2,10 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"proyectoIngesoCursos/graph/model"
 	"proyectoIngesoCursos/models"
 )
 
@@ -30,9 +32,8 @@ func (r *Resolver) Curso(ctx context.Context, courseID string) (*models.Curso, e
 }
 
 // Crear un nuevo curso
-func (r *Resolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*models.Curso, error) {
-	curso := &models.Curso{
-		CourseID:     generateUniqueID(),
+func (r *Resolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {
+	curso := &model.Curso{
 		InstructorID: instructorID,
 		Title:        title,
 		Description:  description,
@@ -94,6 +95,16 @@ func (r *Resolver) SearchCursos(ctx context.Context, query string) ([]*models.Cu
 		return nil, err
 	}
 	return cursos, nil
+}
+
+func (r *queryResolver) CourseByID(ctx context.Context, courseID int) (*model.Curso, error) {
+	var course model.Curso
+	// Buscar el curso por ID en la base de datos
+	if err := r.DB.Where("course_id = ?", courseID).First(&course).Error; err != nil {
+		return nil, fmt.Errorf("curso no encontrado")
+	}
+
+	return &course, nil
 }
 
 // Función auxiliar para generar un ID único

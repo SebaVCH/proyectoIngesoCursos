@@ -1,25 +1,18 @@
 type Curso {
-  courseID: ID!
-  instructorID: ID!
+  courseID: Int!
+  instructorID: String!
   title: String!
   description: String!
   price: Float!
   category: String!
-  instructor: Usuario!
 }
 
-type Usuario {
-  userID: ID!
-  name: String!
-  username: String!
-  email: String!
-}
-
-type Query {
+extend type Query {
   cursos: [Curso!]!
   curso(courseID: ID!): Curso
+  cursoByID(courseID: ID!): Curso
 }
 
-type Mutation {
-  createCurso(instructorID: ID!, title: String!, description: String!, price: Float!, category: String!): Curso!
+extend type Mutation {
+  createCurso(instructorID: String!, title: String!, description: String!, price: Float!, category: String!): Curso!
 }

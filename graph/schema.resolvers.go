@@ -12,7 +12,8 @@ import (
 
 // CreateCurso is the resolver for the createCurso field.
 func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {
-	panic(fmt.Errorf("not implemented: CreateCurso - createCurso"))
+	// Aquí llamas a la lógica que has implementado en resolver.go
+	return r.Resolver.CreateCurso(ctx, instructorID, title, description, price, category)
 }
 
 // Cursos is the resolver for the cursos field.
@@ -23,6 +24,17 @@ func (r *queryResolver) Cursos(ctx context.Context) ([]*model.Curso, error) {
 // Curso is the resolver for the curso field.
 func (r *queryResolver) Curso(ctx context.Context, courseID string) (*model.Curso, error) {
 	panic(fmt.Errorf("not implemented: Curso - curso"))
+}
+
+// CursoByID is the resolver for the cursoByID field.
+func (r *queryResolver) CursoByID(ctx context.Context, courseID string) (*model.Curso, error) {
+	var course model.Curso
+	// Buscar el curso por ID en la base de datos
+	if err := r.DB.Where("course_id = ?", courseID).First(&course).Error; err != nil {
+		return nil, fmt.Errorf("curso no encontrado")
+	}
+
+	return &course, nil
 }
 
 // Mutation returns MutationResolver implementation.
