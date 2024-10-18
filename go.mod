@@ -20,5 +20,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/sosodev/duration v1.3.1 // indirect
+	github.com/streadway/amqp v1.1.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
 )

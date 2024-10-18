@@ -2,6 +2,7 @@
 
 package model
 
+
 type Curso struct {
 	CourseID     int     `json:"courseID"`
 	InstructorID string  `json:"instructorID"`
@@ -10,6 +11,7 @@ type Curso struct {
 	Price        float64 `json:"price"`
 	Category     string  `json:"category"`
 }
+
 
 type Mutation struct {
 }

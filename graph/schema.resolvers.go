@@ -8,11 +8,13 @@ import (
 	"context"
 	"fmt"
 	"proyectoIngesoCursos/graph/model"
+	"strconv" // Importar strconv para convertir strings a números
+	"proyectoIngesoCursos/models"      // Importar el modelo de la base de datos
 )
 
+
 // CreateCurso is the resolver for the createCurso field.
-func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {
-	// Aquí llamas a la lógica que has implementado en resolver.go
+func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {	// Aquí llamas a la lógica que has implementado en resolver.go
 	return r.Resolver.CreateCurso(ctx, instructorID, title, description, price, category)
 }
 
@@ -28,14 +30,30 @@ func (r *queryResolver) Curso(ctx context.Context, courseID string) (*model.Curs
 
 // CursoByID is the resolver for the cursoByID field.
 func (r *queryResolver) CursoByID(ctx context.Context, courseID string) (*model.Curso, error) {
-	var course model.Curso
+	// Convertir el courseID de string a uint
+	id, err := strconv.ParseUint(courseID, 10, 32)
+	if err != nil {
+		return nil, fmt.Errorf("ID inválido: %v", err)
+	}
+
+	var curso models.Curso
+
 	// Buscar el curso por ID en la base de datos
-	if err := r.DB.Where("course_id = ?", courseID).First(&course).Error; err != nil {
+	if err := r.DB.First(&curso, "course_id = ?", uint(id)).Error; err != nil {
 		return nil, fmt.Errorf("curso no encontrado")
 	}
 
-	return &course, nil
+	// Convertir el modelo de la base de datos al modelo GraphQL
+	return &model.Curso{
+		CourseID:     int(curso.CourseID),
+		InstructorID: curso.InstructorID,
+		Title:        curso.Title,
+		Description:  curso.Description,
+		Price:        curso.Price,
+		Category:     curso.Category,
+	}, nil
 }
+
 
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }

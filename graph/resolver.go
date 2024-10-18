@@ -32,18 +32,32 @@ func (r *Resolver) Curso(ctx context.Context, courseID string) (*models.Curso, e
 }
 
 // Crear un nuevo curso
-func (r *Resolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {
-	curso := &model.Curso{
+func (r *Resolver) CreateCurso(ctx context.Context, instructorID, title, description string, price float64, category string) (*model.Curso, error) {
+	// Crear el modelo del curso para la base de datos
+	cursoDB := models.Curso{
 		InstructorID: instructorID,
 		Title:        title,
 		Description:  description,
 		Price:        price,
 		Category:     category,
 	}
-	if err := r.DB.Create(curso).Error; err != nil {
+
+	// Guardar el curso en la base de datos
+	if err := r.DB.Create(&cursoDB).Error; err != nil {
 		return nil, err
 	}
-	return curso, nil
+
+	// Convertir el modelo de la base de datos al modelo GraphQL
+	cursoGraphQL := &model.Curso{
+		CourseID:     int(cursoDB.CourseID), // Conversión de uint a int
+		InstructorID: cursoDB.InstructorID,
+		Title:        cursoDB.Title,
+		Description:  cursoDB.Description,
+		Price:        cursoDB.Price,
+		Category:     cursoDB.Category,
+	}
+
+	return cursoGraphQL, nil
 }
 
 // Actualizar un curso existente

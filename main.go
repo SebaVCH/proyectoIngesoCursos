@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"proyectoIngesoCursos/graph"
 	"proyectoIngesoCursos/models"
+	utils "proyectoIngesoCursos/mq"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -31,6 +32,14 @@ func init() {
 }
 
 func main() {
+	// Iniciar consumidor de RabbitMQ
+	go func() {
+		err := utils.StartCourseConsumer() // Asegúrate de que la función StartUserConsumer sea pública
+		if err != nil {
+			log.Fatalf("Error al iniciar el consumidor de RabbitMQ: %s", err)
+		}
+	}()
+
 	// Resolver
 	resolver := graph.Resolver{DB: bd}
 
