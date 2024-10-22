@@ -9,26 +9,46 @@ import (
 	"fmt"
 	"proyectoIngesoCursos/graph/model"
 	"strconv" // Importar strconv para convertir strings a números
-	"proyectoIngesoCursos/models"      // Importar el modelo de la base de datos
+	"proyectoIngesoCursos/models" // Importar el modelo de la base de datos
 )
 
-
-// CreateCurso is the resolver for the createCurso field.
-func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {	// Aquí llamas a la lógica que has implementado en resolver.go
+// CreateCurso es el resolver para el campo createCurso.
+func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {
 	return r.Resolver.CreateCurso(ctx, instructorID, title, description, price, category)
 }
 
-// Cursos is the resolver for the cursos field.
+// Cursos es el resolver para el campo cursos.
 func (r *queryResolver) Cursos(ctx context.Context) ([]*model.Curso, error) {
-	panic(fmt.Errorf("not implemented: Cursos - cursos"))
+	var cursos []models.Curso
+
+	// Obtener todos los cursos de la base de datos
+	if err := r.DB.Find(&cursos).Error; err != nil {
+		return nil, fmt.Errorf("error al obtener los cursos: %v", err)
+	}
+
+	// Convertir los modelos de la base de datos al modelo GraphQL
+	var result []*model.Curso
+	for _, curso := range cursos {
+		result = append(result, &model.Curso{
+			CourseID:     int(curso.CourseID),
+			InstructorID: curso.InstructorID,
+			Title:        curso.Title,
+			Description:  curso.Description,
+			Price:        curso.Price,
+			Category:     curso.Category,
+		})
+	}
+
+	return result, nil
 }
 
-// Curso is the resolver for the curso field.
+// Curso es el resolver para el campo curso.
 func (r *queryResolver) Curso(ctx context.Context, courseID string) (*model.Curso, error) {
-	panic(fmt.Errorf("not implemented: Curso - curso"))
+	// Implementa la lógica que desees aquí, quizás utilizando courseID para buscar en la base de datos
+	return r.CursoByID(ctx, courseID) // Ejemplo de reutilización
 }
 
-// CursoByID is the resolver for the cursoByID field.
+// CursoByID es el resolver para el campo cursoByID.
 func (r *queryResolver) CursoByID(ctx context.Context, courseID string) (*model.Curso, error) {
 	// Convertir el courseID de string a uint
 	id, err := strconv.ParseUint(courseID, 10, 32)
@@ -52,6 +72,20 @@ func (r *queryResolver) CursoByID(ctx context.Context, courseID string) (*model.
 		Price:        curso.Price,
 		Category:     curso.Category,
 	}, nil
+}
+
+// DeleteCurso es el resolver para el campo deleteCurso.
+func (r *mutationResolver) DeleteCurso(ctx context.Context, courseID string) (bool, error) {
+    var curso models.Curso
+    if err := r.DB.First(&curso, "course_id = ?", courseID).Error; err != nil {
+        return false, fmt.Errorf("curso no encontrado: %v", err)
+    }
+    
+    if err := r.DB.Delete(&curso).Error; err != nil {
+        return false, fmt.Errorf("error al eliminar el curso: %v", err)
+    }
+
+    return true, nil
 }
 
 
