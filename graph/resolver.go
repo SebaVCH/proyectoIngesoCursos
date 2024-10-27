@@ -60,44 +60,44 @@ func (r *Resolver) CreateCurso(ctx context.Context, instructorID, title, descrip
 	return cursoGraphQL, nil
 }
 
-// Actualizar un curso existente
-func (r *Resolver) UpdateCurso(ctx context.Context, courseID string, title *string, description *string, price *float64, category *string) (*models.Curso, error) {
+// UpdateCursoByID - actualiza las variables de un curso por su ID
+func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID uint, title, description string, price float64, category string) (*models.Curso, error) {
 	var curso models.Curso
+
+	// Buscar el curso por ID
 	if err := r.DB.First(&curso, "course_id = ?", courseID).Error; err != nil {
-		return nil, err
+		return nil, fmt.Errorf("curso no encontrado")
 	}
 
-	// Actualizar los campos si no son nulos
-	if title != nil {
-		curso.Title = *title
-	}
-	if description != nil {
-		curso.Description = *description
-	}
-	if price != nil {
-		curso.Price = *price
-	}
-	if category != nil {
-		curso.Category = *category
-	}
+	// Actualizar las variables del curso
+	curso.Title = title
+	curso.Description = description
+	curso.Price = price
+	curso.Category = category
 
+	// Guardar los cambios
 	if err := r.DB.Save(&curso).Error; err != nil {
-		return nil, err
+		return nil, fmt.Errorf("no se pudo actualizar el curso")
 	}
+
 	return &curso, nil
 }
 
-// Eliminar un curso
-func (r *Resolver) DeleteCurso(ctx context.Context, courseID string) (bool, error) {
+// DeleteCursoByID - elimina un curso por su ID
+func (r *Resolver) DeleteCursoByID(ctx context.Context, courseID uint) (string, error) {
 	var curso models.Curso
+
+	// Buscar el curso por ID
 	if err := r.DB.First(&curso, "course_id = ?", courseID).Error; err != nil {
-		return false, err
+		return "", fmt.Errorf("curso no encontrado")
 	}
 
+	// Eliminar el curso de la base de datos
 	if err := r.DB.Delete(&curso).Error; err != nil {
-		return false, err
+		return "", fmt.Errorf("no se pudo eliminar el curso")
 	}
-	return true, nil
+
+	return "Curso eliminado exitosamente", nil
 }
 
 // Buscar cursos por título o categoría

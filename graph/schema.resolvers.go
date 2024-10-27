@@ -8,13 +8,36 @@ import (
 	"context"
 	"fmt"
 	"proyectoIngesoCursos/graph/model"
-	"strconv" // Importar strconv para convertir strings a números
-	"proyectoIngesoCursos/models" // Importar el modelo de la base de datos
+	"proyectoIngesoCursos/models"
+	"strconv"
 )
 
 // CreateCurso es el resolver para el campo createCurso.
 func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error) {
 	return r.Resolver.CreateCurso(ctx, instructorID, title, description, price, category)
+}
+
+// DeleteCursoByID is the resolver for the deleteCursoByID field.
+func (r *mutationResolver) DeleteCursoByID(ctx context.Context, courseID int) (string, error) {
+	return r.Resolver.DeleteCursoByID(ctx, uint(courseID))
+}
+
+// UpdateCursoByID is the resolver for the updateCursoByID field.
+func (r *mutationResolver) UpdateCursoByID(ctx context.Context, courseID int, title string, description string, price float64, category string) (*model.Curso, error) {
+	updatedCurso, err := r.Resolver.UpdateCursoByID(ctx, uint(courseID), title, description, price, category)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convertir el modelo Gorm a GraphQL
+	return &model.Curso{
+		CourseID:     int(updatedCurso.CourseID),
+		InstructorID: updatedCurso.InstructorID,
+		Title:        updatedCurso.Title,
+		Description:  updatedCurso.Description,
+		Price:        updatedCurso.Price,
+		Category:     updatedCurso.Category,
+	}, nil
 }
 
 // Cursos es el resolver para el campo cursos.
@@ -74,21 +97,6 @@ func (r *queryResolver) CursoByID(ctx context.Context, courseID string) (*model.
 	}, nil
 }
 
-// DeleteCurso es el resolver para el campo deleteCurso.
-func (r *mutationResolver) DeleteCurso(ctx context.Context, courseID string) (bool, error) {
-    var curso models.Curso
-    if err := r.DB.First(&curso, "course_id = ?", courseID).Error; err != nil {
-        return false, fmt.Errorf("curso no encontrado: %v", err)
-    }
-    
-    if err := r.DB.Delete(&curso).Error; err != nil {
-        return false, fmt.Errorf("error al eliminar el curso: %v", err)
-    }
-
-    return true, nil
-}
-
-
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
@@ -97,3 +105,24 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func (r *mutationResolver) DeleteCurso(ctx context.Context, courseID string) (bool, error) {
+	var curso models.Curso
+	if err := r.DB.First(&curso, "course_id = ?", courseID).Error; err != nil {
+		return false, fmt.Errorf("curso no encontrado: %v", err)
+	}
+
+	if err := r.DB.Delete(&curso).Error; err != nil {
+		return false, fmt.Errorf("error al eliminar el curso: %v", err)
+	}
+
+	return true, nil
+}
+*/
