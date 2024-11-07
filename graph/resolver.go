@@ -32,10 +32,9 @@ func (r *Resolver) Curso(ctx context.Context, courseID string) (*models.Curso, e
 }
 
 // Crear un nuevo curso
-func (r *Resolver) CreateCurso(ctx context.Context, instructorID, title, description string, price float64, category, imageURL string, instructorName string) (*model.Curso, error) {
+func (r *Resolver) CreateCurso(ctx context.Context, title, description string, price float64, category, imageURL string, instructorName string) (*model.Curso, error) {
 	// Crear el modelo del curso para la base de datos
 	cursoDB := models.Curso{
-		InstructorID:   instructorID,
 		InstructorName: instructorName,
 		Title:          title,
 		Description:    description,
@@ -52,7 +51,6 @@ func (r *Resolver) CreateCurso(ctx context.Context, instructorID, title, descrip
 	// Convertir el modelo de la base de datos al modelo GraphQL
 	cursoGraphQL := &model.Curso{
 		CourseID:       int(cursoDB.CourseID),
-		InstructorID:   cursoDB.InstructorID,
 		InstructorName: cursoDB.InstructorName,
 		Title:          cursoDB.Title,
 		Description:    cursoDB.Description,

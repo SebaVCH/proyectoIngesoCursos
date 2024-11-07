@@ -4,7 +4,6 @@ package model
 
 type Curso struct {
 	CourseID       int     `json:"courseID"`
-	InstructorID   string  `json:"instructorID"`
 	InstructorName string  `json:"instructorName"`
 	Title          string  `json:"title"`
 	Description    string  `json:"description"`

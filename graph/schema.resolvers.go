@@ -13,8 +13,8 @@ import (
 )
 
 // CreateCurso is the resolver for the createCurso field.
-func (r *mutationResolver) CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string, imageURL string, instructorName string) (*model.Curso, error) {
-	return r.Resolver.CreateCurso(ctx, instructorID, title, description, price, category, imageURL, instructorName)
+func (r *mutationResolver) CreateCurso(ctx context.Context, title string, description string, price float64, category string, imageURL string, instructorName string) (*model.Curso, error) {
+	return r.Resolver.CreateCurso(ctx, title, description, price, category, imageURL, instructorName)
 }
 
 // DeleteCursoByID is the resolver for the deleteCursoByID field.
@@ -32,7 +32,6 @@ func (r *mutationResolver) UpdateCursoByID(ctx context.Context, courseID int, ti
 	// Convertir el modelo Gorm a GraphQL
 	return &model.Curso{
 		CourseID:       int(updatedCurso.CourseID),
-		InstructorID:   updatedCurso.InstructorID,
 		InstructorName: updatedCurso.InstructorName,
 		Title:          updatedCurso.Title,
 		Description:    updatedCurso.Description,
@@ -56,7 +55,6 @@ func (r *queryResolver) Cursos(ctx context.Context) ([]*model.Curso, error) {
 	for _, curso := range cursos {
 		result = append(result, &model.Curso{
 			CourseID:       int(curso.CourseID),
-			InstructorID:   curso.InstructorID,
 			InstructorName: curso.InstructorName,
 			Title:          curso.Title,
 			Description:    curso.Description,
@@ -92,7 +90,6 @@ func (r *queryResolver) CursoByID(ctx context.Context, courseID string) (*model.
 	// Convertir el modelo de la base de datos al modelo GraphQL
 	return &model.Curso{
 		CourseID:       int(curso.CourseID),
-		InstructorID:   curso.InstructorID,
 		InstructorName: curso.InstructorName,
 		Title:          curso.Title,
 		Description:    curso.Description,
