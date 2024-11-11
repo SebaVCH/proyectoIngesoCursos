@@ -11,5 +11,8 @@ COPY . .
 RUN go mod download
 RUN go build -o main .
 
+# Exponer el puerto 8081
+EXPOSE 8081
+
 # Ejecutar la aplicación
 CMD ["./main"]
