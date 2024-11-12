@@ -1,6 +1,7 @@
 package models
 
 type Curso struct {
+<<<<<<< HEAD
 	CourseID       uint    `gorm:"primaryKey;autoIncrement" json:"courseID"` // Cambiado a `uint` y agregado `autoIncrement`
 	Title          string  `gorm:"type:text" json:"title"`
 	Description    string  `gorm:"type:text" json:"description"`
@@ -8,4 +9,12 @@ type Curso struct {
 	Category       string  `gorm:"type:text" json:"category"`
 	ImageURL       string  `gorm:"type:text" json:"imageURL"`
 	InstructorName string  `gorm:"type:text" json:"instructorName"`
+=======
+	CourseID     uint    `gorm:"primaryKey;autoIncrement" json:"courseID"` // Cambiado a `uint` y agregado `autoIncrement`
+	InstructorID string  `gorm:"type:text" json:"instructorID"`
+	Title        string  `gorm:"type:text" json:"title"`
+	Description  string  `gorm:"type:text" json:"description"`
+	Price        float64 `gorm:"type:float" json:"price"`
+	Category     string  `gorm:"type:text" json:"category"`
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 }

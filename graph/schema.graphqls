@@ -1,11 +1,14 @@
 type Curso {
   courseID: Int!
+<<<<<<< HEAD
   instructorName: String!
+=======
+  instructorID: String!
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
   title: String!
   description: String!
   price: Float!
   category: String!
-  imageURL: String!
 }
 
 extend type Query {
@@ -15,7 +18,11 @@ extend type Query {
 }
 
 extend type Mutation {
+<<<<<<< HEAD
   createCurso(title: String!, description: String!, price: Float!, category: String!, imageURL: String!, instructorName: String!): Curso!
+=======
+  createCurso(instructorID: String!, title: String!, description: String!, price: Float!, category: String!): Curso!
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
   deleteCursoByID(courseID: Int!): String!
-  updateCursoByID(courseID: Int!, title: String!, description: String!, price: Float!, category: String!, imageURL: String!): Curso!
+  updateCursoByID(courseID: Int!, title: String!, description: String!, price: Float!, category: String!): Curso!
 }

@@ -3,6 +3,7 @@
 package model
 
 type Curso struct {
+<<<<<<< HEAD
 	CourseID       int     `json:"courseID"`
 	InstructorName string  `json:"instructorName"`
 	Title          string  `json:"title"`
@@ -10,6 +11,14 @@ type Curso struct {
 	Price          float64 `json:"price"`
 	Category       string  `json:"category"`
 	ImageURL       string  `json:"imageURL"`
+=======
+	CourseID     int     `json:"courseID"`
+	InstructorID string  `json:"instructorID"`
+	Title        string  `json:"title"`
+	Description  string  `json:"description"`
+	Price        float64 `json:"price"`
+	Category     string  `json:"category"`
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 }
 
 type Mutation struct {

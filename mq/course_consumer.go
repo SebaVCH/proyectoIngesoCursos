@@ -89,13 +89,11 @@ func StartCourseConsumer() error {
 					continue
 				}
 
-				// Responder con el precio y la foto del curso
+				// Responder con el precio del curso
 				response := struct {
-					Price    float64 `json:"price"`
-					ImageURL string  `json:"image_url"`
+					Price float64 `json:"price"`
 				}{
-					Price:    curso.Price,
-					ImageURL: curso.ImageURL,
+					Price: curso.Price,
 				}
 
 				responseBody, err = json.Marshal(response)
@@ -113,13 +111,11 @@ func StartCourseConsumer() error {
 					continue
 				}
 
-				// Responder con el nombre y la foto del curso
+				// Responder con el nombre del curso
 				response := struct {
-					Name     string `json:"name"`
-					ImageURL string `json:"image_url"`
+					Name string `json:"name"`
 				}{
-					Name:     curso.Title,
-					ImageURL: curso.ImageURL,
+					Name: curso.Title,
 				}
 
 				responseBody, err = json.Marshal(response)

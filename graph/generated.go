@@ -48,6 +48,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Curso struct {
+<<<<<<< HEAD
 		Category       func(childComplexity int) int
 		CourseID       func(childComplexity int) int
 		Description    func(childComplexity int) int
@@ -59,8 +60,20 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CreateCurso     func(childComplexity int, title string, description string, price float64, category string, imageURL string, instructorName string) int
+=======
+		Category     func(childComplexity int) int
+		CourseID     func(childComplexity int) int
+		Description  func(childComplexity int) int
+		InstructorID func(childComplexity int) int
+		Price        func(childComplexity int) int
+		Title        func(childComplexity int) int
+	}
+
+	Mutation struct {
+		CreateCurso     func(childComplexity int, instructorID string, title string, description string, price float64, category string) int
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 		DeleteCursoByID func(childComplexity int, courseID int) int
-		UpdateCursoByID func(childComplexity int, courseID int, title string, description string, price float64, category string, imageURL string) int
+		UpdateCursoByID func(childComplexity int, courseID int, title string, description string, price float64, category string) int
 	}
 
 	Query struct {
@@ -71,9 +84,13 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
+<<<<<<< HEAD
 	CreateCurso(ctx context.Context, title string, description string, price float64, category string, imageURL string, instructorName string) (*model.Curso, error)
+=======
+	CreateCurso(ctx context.Context, instructorID string, title string, description string, price float64, category string) (*model.Curso, error)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	DeleteCursoByID(ctx context.Context, courseID int) (string, error)
-	UpdateCursoByID(ctx context.Context, courseID int, title string, description string, price float64, category string, imageURL string) (*model.Curso, error)
+	UpdateCursoByID(ctx context.Context, courseID int, title string, description string, price float64, category string) (*model.Curso, error)
 }
 type QueryResolver interface {
 	Cursos(ctx context.Context) ([]*model.Curso, error)
@@ -121,6 +138,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Curso.Description(childComplexity), true
 
+<<<<<<< HEAD
 	case "Curso.imageURL":
 		if e.complexity.Curso.ImageURL == nil {
 			break
@@ -134,6 +152,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Curso.InstructorName(childComplexity), true
+=======
+	case "Curso.instructorID":
+		if e.complexity.Curso.InstructorID == nil {
+			break
+		}
+
+		return e.complexity.Curso.InstructorID(childComplexity), true
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 
 	case "Curso.price":
 		if e.complexity.Curso.Price == nil {
@@ -159,7 +185,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
+<<<<<<< HEAD
 		return e.complexity.Mutation.CreateCurso(childComplexity, args["title"].(string), args["description"].(string), args["price"].(float64), args["category"].(string), args["imageURL"].(string), args["instructorName"].(string)), true
+=======
+		return e.complexity.Mutation.CreateCurso(childComplexity, args["instructorID"].(string), args["title"].(string), args["description"].(string), args["price"].(float64), args["category"].(string)), true
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 
 	case "Mutation.deleteCursoByID":
 		if e.complexity.Mutation.DeleteCursoByID == nil {
@@ -183,7 +213,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateCursoByID(childComplexity, args["courseID"].(int), args["title"].(string), args["description"].(string), args["price"].(float64), args["category"].(string), args["imageURL"].(string)), true
+		return e.complexity.Mutation.UpdateCursoByID(childComplexity, args["courseID"].(int), args["title"].(string), args["description"].(string), args["price"].(float64), args["category"].(string)), true
 
 	case "Query.curso":
 		if e.complexity.Query.Curso == nil {
@@ -366,12 +396,16 @@ func (ec *executionContext) field_Mutation_createCurso_args(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
+<<<<<<< HEAD
 	args["imageURL"] = arg4
 	arg5, err := ec.field_Mutation_createCurso_argsInstructorName(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["instructorName"] = arg5
+=======
+	args["category"] = arg4
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	return args, nil
 }
 func (ec *executionContext) field_Mutation_createCurso_argsTitle(
@@ -462,50 +496,6 @@ func (ec *executionContext) field_Mutation_createCurso_argsCategory(
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_createCurso_argsImageURL(
-	ctx context.Context,
-	rawArgs map[string]interface{},
-) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["imageURL"]
-	if !ok {
-		var zeroVal string
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("imageURL"))
-	if tmp, ok := rawArgs["imageURL"]; ok {
-		return ec.unmarshalNString2string(ctx, tmp)
-	}
-
-	var zeroVal string
-	return zeroVal, nil
-}
-
-func (ec *executionContext) field_Mutation_createCurso_argsInstructorName(
-	ctx context.Context,
-	rawArgs map[string]interface{},
-) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["instructorName"]
-	if !ok {
-		var zeroVal string
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("instructorName"))
-	if tmp, ok := rawArgs["instructorName"]; ok {
-		return ec.unmarshalNString2string(ctx, tmp)
-	}
-
-	var zeroVal string
-	return zeroVal, nil
-}
-
 func (ec *executionContext) field_Mutation_deleteCursoByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -566,11 +556,6 @@ func (ec *executionContext) field_Mutation_updateCursoByID_args(ctx context.Cont
 		return nil, err
 	}
 	args["category"] = arg4
-	arg5, err := ec.field_Mutation_updateCursoByID_argsImageURL(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["imageURL"] = arg5
 	return args, nil
 }
 func (ec *executionContext) field_Mutation_updateCursoByID_argsCourseID(
@@ -676,28 +661,6 @@ func (ec *executionContext) field_Mutation_updateCursoByID_argsCategory(
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
 	if tmp, ok := rawArgs["category"]; ok {
-		return ec.unmarshalNString2string(ctx, tmp)
-	}
-
-	var zeroVal string
-	return zeroVal, nil
-}
-
-func (ec *executionContext) field_Mutation_updateCursoByID_argsImageURL(
-	ctx context.Context,
-	rawArgs map[string]interface{},
-) (string, error) {
-	// We won't call the directive if the argument is null.
-	// Set call_argument_directives_with_null to true to call directives
-	// even if the argument is null.
-	_, ok := rawArgs["imageURL"]
-	if !ok {
-		var zeroVal string
-		return zeroVal, nil
-	}
-
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("imageURL"))
-	if tmp, ok := rawArgs["imageURL"]; ok {
 		return ec.unmarshalNString2string(ctx, tmp)
 	}
 
@@ -917,8 +880,13 @@ func (ec *executionContext) fieldContext_Curso_courseID(_ context.Context, field
 	return fc, nil
 }
 
+<<<<<<< HEAD
 func (ec *executionContext) _Curso_instructorName(ctx context.Context, field graphql.CollectedField, obj *model.Curso) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Curso_instructorName(ctx, field)
+=======
+func (ec *executionContext) _Curso_instructorID(ctx context.Context, field graphql.CollectedField, obj *model.Curso) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Curso_instructorID(ctx, field)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	if err != nil {
 		return graphql.Null
 	}
@@ -931,7 +899,11 @@ func (ec *executionContext) _Curso_instructorName(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
+<<<<<<< HEAD
 		return obj.InstructorName, nil
+=======
+		return obj.InstructorID, nil
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -948,7 +920,11 @@ func (ec *executionContext) _Curso_instructorName(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+<<<<<<< HEAD
 func (ec *executionContext) fieldContext_Curso_instructorName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+=======
+func (ec *executionContext) fieldContext_Curso_instructorID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	fc = &graphql.FieldContext{
 		Object:     "Curso",
 		Field:      field,
@@ -1137,50 +1113,6 @@ func (ec *executionContext) fieldContext_Curso_category(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Curso_imageURL(ctx context.Context, field graphql.CollectedField, obj *model.Curso) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Curso_imageURL(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ImageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Curso_imageURL(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Curso",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_createCurso(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createCurso(ctx, field)
 	if err != nil {
@@ -1195,7 +1127,11 @@ func (ec *executionContext) _Mutation_createCurso(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
+<<<<<<< HEAD
 		return ec.resolvers.Mutation().CreateCurso(rctx, fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(float64), fc.Args["category"].(string), fc.Args["imageURL"].(string), fc.Args["instructorName"].(string))
+=======
+		return ec.resolvers.Mutation().CreateCurso(rctx, fc.Args["instructorID"].(string), fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(float64), fc.Args["category"].(string))
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1222,8 +1158,13 @@ func (ec *executionContext) fieldContext_Mutation_createCurso(ctx context.Contex
 			switch field.Name {
 			case "courseID":
 				return ec.fieldContext_Curso_courseID(ctx, field)
+<<<<<<< HEAD
 			case "instructorName":
 				return ec.fieldContext_Curso_instructorName(ctx, field)
+=======
+			case "instructorID":
+				return ec.fieldContext_Curso_instructorID(ctx, field)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 			case "title":
 				return ec.fieldContext_Curso_title(ctx, field)
 			case "description":
@@ -1232,8 +1173,6 @@ func (ec *executionContext) fieldContext_Mutation_createCurso(ctx context.Contex
 				return ec.fieldContext_Curso_price(ctx, field)
 			case "category":
 				return ec.fieldContext_Curso_category(ctx, field)
-			case "imageURL":
-				return ec.fieldContext_Curso_imageURL(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Curso", field.Name)
 		},
@@ -1321,7 +1260,7 @@ func (ec *executionContext) _Mutation_updateCursoByID(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCursoByID(rctx, fc.Args["courseID"].(int), fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(float64), fc.Args["category"].(string), fc.Args["imageURL"].(string))
+		return ec.resolvers.Mutation().UpdateCursoByID(rctx, fc.Args["courseID"].(int), fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(float64), fc.Args["category"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1348,8 +1287,13 @@ func (ec *executionContext) fieldContext_Mutation_updateCursoByID(ctx context.Co
 			switch field.Name {
 			case "courseID":
 				return ec.fieldContext_Curso_courseID(ctx, field)
+<<<<<<< HEAD
 			case "instructorName":
 				return ec.fieldContext_Curso_instructorName(ctx, field)
+=======
+			case "instructorID":
+				return ec.fieldContext_Curso_instructorID(ctx, field)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 			case "title":
 				return ec.fieldContext_Curso_title(ctx, field)
 			case "description":
@@ -1358,8 +1302,6 @@ func (ec *executionContext) fieldContext_Mutation_updateCursoByID(ctx context.Co
 				return ec.fieldContext_Curso_price(ctx, field)
 			case "category":
 				return ec.fieldContext_Curso_category(ctx, field)
-			case "imageURL":
-				return ec.fieldContext_Curso_imageURL(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Curso", field.Name)
 		},
@@ -1419,8 +1361,13 @@ func (ec *executionContext) fieldContext_Query_cursos(_ context.Context, field g
 			switch field.Name {
 			case "courseID":
 				return ec.fieldContext_Curso_courseID(ctx, field)
+<<<<<<< HEAD
 			case "instructorName":
 				return ec.fieldContext_Curso_instructorName(ctx, field)
+=======
+			case "instructorID":
+				return ec.fieldContext_Curso_instructorID(ctx, field)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 			case "title":
 				return ec.fieldContext_Curso_title(ctx, field)
 			case "description":
@@ -1429,8 +1376,6 @@ func (ec *executionContext) fieldContext_Query_cursos(_ context.Context, field g
 				return ec.fieldContext_Curso_price(ctx, field)
 			case "category":
 				return ec.fieldContext_Curso_category(ctx, field)
-			case "imageURL":
-				return ec.fieldContext_Curso_imageURL(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Curso", field.Name)
 		},
@@ -1476,8 +1421,13 @@ func (ec *executionContext) fieldContext_Query_curso(ctx context.Context, field 
 			switch field.Name {
 			case "courseID":
 				return ec.fieldContext_Curso_courseID(ctx, field)
+<<<<<<< HEAD
 			case "instructorName":
 				return ec.fieldContext_Curso_instructorName(ctx, field)
+=======
+			case "instructorID":
+				return ec.fieldContext_Curso_instructorID(ctx, field)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 			case "title":
 				return ec.fieldContext_Curso_title(ctx, field)
 			case "description":
@@ -1486,8 +1436,6 @@ func (ec *executionContext) fieldContext_Query_curso(ctx context.Context, field 
 				return ec.fieldContext_Curso_price(ctx, field)
 			case "category":
 				return ec.fieldContext_Curso_category(ctx, field)
-			case "imageURL":
-				return ec.fieldContext_Curso_imageURL(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Curso", field.Name)
 		},
@@ -1544,8 +1492,13 @@ func (ec *executionContext) fieldContext_Query_cursoByID(ctx context.Context, fi
 			switch field.Name {
 			case "courseID":
 				return ec.fieldContext_Curso_courseID(ctx, field)
+<<<<<<< HEAD
 			case "instructorName":
 				return ec.fieldContext_Curso_instructorName(ctx, field)
+=======
+			case "instructorID":
+				return ec.fieldContext_Curso_instructorID(ctx, field)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 			case "title":
 				return ec.fieldContext_Curso_title(ctx, field)
 			case "description":
@@ -1554,8 +1507,6 @@ func (ec *executionContext) fieldContext_Query_cursoByID(ctx context.Context, fi
 				return ec.fieldContext_Curso_price(ctx, field)
 			case "category":
 				return ec.fieldContext_Curso_category(ctx, field)
-			case "imageURL":
-				return ec.fieldContext_Curso_imageURL(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Curso", field.Name)
 		},
@@ -3500,8 +3451,13 @@ func (ec *executionContext) _Curso(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+<<<<<<< HEAD
 		case "instructorName":
 			out.Values[i] = ec._Curso_instructorName(ctx, field, obj)
+=======
+		case "instructorID":
+			out.Values[i] = ec._Curso_instructorID(ctx, field, obj)
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3522,11 +3478,6 @@ func (ec *executionContext) _Curso(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "category":
 			out.Values[i] = ec._Curso_category(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "imageURL":
-			out.Values[i] = ec._Curso_imageURL(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

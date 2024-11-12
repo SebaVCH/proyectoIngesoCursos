@@ -32,6 +32,7 @@ func (r *Resolver) Curso(ctx context.Context, courseID string) (*models.Curso, e
 }
 
 // Crear un nuevo curso
+<<<<<<< HEAD
 func (r *Resolver) CreateCurso(ctx context.Context, title, description string, price float64, category, imageURL string, instructorName string) (*model.Curso, error) {
 	// Crear el modelo del curso para la base de datos
 	cursoDB := models.Curso{
@@ -41,6 +42,16 @@ func (r *Resolver) CreateCurso(ctx context.Context, title, description string, p
 		Price:          price,
 		Category:       category,
 		ImageURL:       imageURL,
+=======
+func (r *Resolver) CreateCurso(ctx context.Context, instructorID, title, description string, price float64, category string) (*model.Curso, error) {
+	// Crear el modelo del curso para la base de datos
+	cursoDB := models.Curso{
+		InstructorID: instructorID,
+		Title:        title,
+		Description:  description,
+		Price:        price,
+		Category:     category,
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	}
 
 	// Guardar el curso en la base de datos
@@ -50,6 +61,7 @@ func (r *Resolver) CreateCurso(ctx context.Context, title, description string, p
 
 	// Convertir el modelo de la base de datos al modelo GraphQL
 	cursoGraphQL := &model.Curso{
+<<<<<<< HEAD
 		CourseID:       int(cursoDB.CourseID),
 		InstructorName: cursoDB.InstructorName,
 		Title:          cursoDB.Title,
@@ -57,13 +69,21 @@ func (r *Resolver) CreateCurso(ctx context.Context, title, description string, p
 		Price:          cursoDB.Price,
 		Category:       cursoDB.Category,
 		ImageURL:       cursoDB.ImageURL,
+=======
+		CourseID:     int(cursoDB.CourseID), // Conversión de uint a int
+		InstructorID: cursoDB.InstructorID,
+		Title:        cursoDB.Title,
+		Description:  cursoDB.Description,
+		Price:        cursoDB.Price,
+		Category:     cursoDB.Category,
+>>>>>>> parent of cd0bb11 (Logica para mostrar imagen de cada curso y mostrar el nombre del instructor)
 	}
 
 	return cursoGraphQL, nil
 }
 
-// Actualizar un curso por su ID
-func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID int, title, description string, price float64, category, imageURL string) (*models.Curso, error) {
+// UpdateCursoByID - actualiza las variables de un curso por su ID
+func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID uint, title, description string, price float64, category string) (*models.Curso, error) {
 	var curso models.Curso
 
 	// Buscar el curso por ID
@@ -76,7 +96,6 @@ func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID int, title, des
 	curso.Description = description
 	curso.Price = price
 	curso.Category = category
-	curso.ImageURL = imageURL
 
 	// Guardar los cambios
 	if err := r.DB.Save(&curso).Error; err != nil {
@@ -86,8 +105,8 @@ func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID int, title, des
 	return &curso, nil
 }
 
-// Eliminar un curso por su ID
-func (r *Resolver) DeleteCursoByID(ctx context.Context, courseID int) (string, error) {
+// DeleteCursoByID - elimina un curso por su ID
+func (r *Resolver) DeleteCursoByID(ctx context.Context, courseID uint) (string, error) {
 	var curso models.Curso
 
 	// Buscar el curso por ID
@@ -114,7 +133,7 @@ func (r *Resolver) SearchCursos(ctx context.Context, query string) ([]*models.Cu
 	return cursos, nil
 }
 
-func (r *Resolver) CourseByID(ctx context.Context, courseID int) (*model.Curso, error) {
+func (r *queryResolver) CourseByID(ctx context.Context, courseID int) (*model.Curso, error) {
 	var course model.Curso
 	// Buscar el curso por ID en la base de datos
 	if err := r.DB.Where("course_id = ?", courseID).First(&course).Error; err != nil {
