@@ -3,13 +3,13 @@
 package model
 
 type Curso struct {
-	CourseID       int     `json:"courseID"`
-	InstructorName string  `json:"instructorName"`
-	Title          string  `json:"title"`
-	Description    string  `json:"description"`
-	Price          float64 `json:"price"`
-	Category       string  `json:"category"`
-	ImageURL       string  `json:"imageURL"`
+	CourseID       int    `json:"courseID"`
+	InstructorName string `json:"instructorName"`
+	Title          string `json:"title"`
+	Description    string `json:"description"`
+	Price          int    `json:"price"`
+	Category       string `json:"category"`
+	ImageURL       string `json:"imageURL"`
 }
 
 type Mutation struct {

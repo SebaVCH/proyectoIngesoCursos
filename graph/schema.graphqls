@@ -3,7 +3,7 @@ type Curso {
   instructorName: String!
   title: String!
   description: String!
-  price: Float!
+  price: Int!
   category: String!
   imageURL: String!
 }
@@ -15,7 +15,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  createCurso(title: String!, description: String!, price: Float!, category: String!, imageURL: String!, instructorName: String!): Curso!
+  createCurso(title: String!, description: String!, price: Int!, category: String!, imageURL: String!, instructorName: String!): Curso!
   deleteCursoByID(courseID: Int!): String!
-  updateCursoByID(courseID: Int!, title: String!, description: String!, price: Float!, category: String!, imageURL: String!): Curso!
+  updateCursoByID(courseID: Int!, title: String!, description: String!, price: Int!, category: String!, imageURL: String!): Curso!
 }

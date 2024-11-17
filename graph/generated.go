@@ -58,9 +58,9 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateCurso     func(childComplexity int, title string, description string, price float64, category string, imageURL string, instructorName string) int
+		CreateCurso     func(childComplexity int, title string, description string, price int, category string, imageURL string, instructorName string) int
 		DeleteCursoByID func(childComplexity int, courseID int) int
-		UpdateCursoByID func(childComplexity int, courseID int, title string, description string, price float64, category string, imageURL string) int
+		UpdateCursoByID func(childComplexity int, courseID int, title string, description string, price int, category string, imageURL string) int
 	}
 
 	Query struct {
@@ -71,9 +71,9 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateCurso(ctx context.Context, title string, description string, price float64, category string, imageURL string, instructorName string) (*model.Curso, error)
+	CreateCurso(ctx context.Context, title string, description string, price int, category string, imageURL string, instructorName string) (*model.Curso, error)
 	DeleteCursoByID(ctx context.Context, courseID int) (string, error)
-	UpdateCursoByID(ctx context.Context, courseID int, title string, description string, price float64, category string, imageURL string) (*model.Curso, error)
+	UpdateCursoByID(ctx context.Context, courseID int, title string, description string, price int, category string, imageURL string) (*model.Curso, error)
 }
 type QueryResolver interface {
 	Cursos(ctx context.Context) ([]*model.Curso, error)
@@ -159,7 +159,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateCurso(childComplexity, args["title"].(string), args["description"].(string), args["price"].(float64), args["category"].(string), args["imageURL"].(string), args["instructorName"].(string)), true
+		return e.complexity.Mutation.CreateCurso(childComplexity, args["title"].(string), args["description"].(string), args["price"].(int), args["category"].(string), args["imageURL"].(string), args["instructorName"].(string)), true
 
 	case "Mutation.deleteCursoByID":
 		if e.complexity.Mutation.DeleteCursoByID == nil {
@@ -183,7 +183,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateCursoByID(childComplexity, args["courseID"].(int), args["title"].(string), args["description"].(string), args["price"].(float64), args["category"].(string), args["imageURL"].(string)), true
+		return e.complexity.Mutation.UpdateCursoByID(childComplexity, args["courseID"].(int), args["title"].(string), args["description"].(string), args["price"].(int), args["category"].(string), args["imageURL"].(string)), true
 
 	case "Query.curso":
 		if e.complexity.Query.Curso == nil {
@@ -221,12 +221,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 }
 
 func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
-	rc := graphql.GetOperationContext(ctx)
-	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
+	opCtx := graphql.GetOperationContext(ctx)
+	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap()
 	first := true
 
-	switch rc.Operation.Operation {
+	switch opCtx.Operation.Operation {
 	case ast.Query:
 		return func(ctx context.Context) *graphql.Response {
 			var response graphql.Response
@@ -234,7 +234,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 			if first {
 				first = false
 				ctx = graphql.WithUnmarshalerMap(ctx, inputUnmarshalMap)
-				data = ec._Query(ctx, rc.Operation.SelectionSet)
+				data = ec._Query(ctx, opCtx.Operation.SelectionSet)
 			} else {
 				if atomic.LoadInt32(&ec.pendingDeferred) > 0 {
 					result := <-ec.deferredResults
@@ -264,7 +264,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 			}
 			first = false
 			ctx = graphql.WithUnmarshalerMap(ctx, inputUnmarshalMap)
-			data := ec._Mutation(ctx, rc.Operation.SelectionSet)
+			data := ec._Mutation(ctx, opCtx.Operation.SelectionSet)
 			var buf bytes.Buffer
 			data.MarshalGQL(&buf)
 
@@ -421,22 +421,22 @@ func (ec *executionContext) field_Mutation_createCurso_argsDescription(
 func (ec *executionContext) field_Mutation_createCurso_argsPrice(
 	ctx context.Context,
 	rawArgs map[string]interface{},
-) (float64, error) {
+) (int, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["price"]
 	if !ok {
-		var zeroVal float64
+		var zeroVal int
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("price"))
 	if tmp, ok := rawArgs["price"]; ok {
-		return ec.unmarshalNFloat2float64(ctx, tmp)
+		return ec.unmarshalNInt2int(ctx, tmp)
 	}
 
-	var zeroVal float64
+	var zeroVal int
 	return zeroVal, nil
 }
 
@@ -642,22 +642,22 @@ func (ec *executionContext) field_Mutation_updateCursoByID_argsDescription(
 func (ec *executionContext) field_Mutation_updateCursoByID_argsPrice(
 	ctx context.Context,
 	rawArgs map[string]interface{},
-) (float64, error) {
+) (int, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["price"]
 	if !ok {
-		var zeroVal float64
+		var zeroVal int
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("price"))
 	if tmp, ok := rawArgs["price"]; ok {
-		return ec.unmarshalNFloat2float64(ctx, tmp)
+		return ec.unmarshalNInt2int(ctx, tmp)
 	}
 
-	var zeroVal float64
+	var zeroVal int
 	return zeroVal, nil
 }
 
@@ -1075,9 +1075,9 @@ func (ec *executionContext) _Curso_price(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Curso_price(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1087,7 +1087,7 @@ func (ec *executionContext) fieldContext_Curso_price(_ context.Context, field gr
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Float does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1195,7 +1195,7 @@ func (ec *executionContext) _Mutation_createCurso(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateCurso(rctx, fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(float64), fc.Args["category"].(string), fc.Args["imageURL"].(string), fc.Args["instructorName"].(string))
+		return ec.resolvers.Mutation().CreateCurso(rctx, fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(int), fc.Args["category"].(string), fc.Args["imageURL"].(string), fc.Args["instructorName"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1321,7 +1321,7 @@ func (ec *executionContext) _Mutation_updateCursoByID(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCursoByID(rctx, fc.Args["courseID"].(int), fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(float64), fc.Args["category"].(string), fc.Args["imageURL"].(string))
+		return ec.resolvers.Mutation().UpdateCursoByID(rctx, fc.Args["courseID"].(int), fc.Args["title"].(string), fc.Args["description"].(string), fc.Args["price"].(int), fc.Args["category"].(string), fc.Args["imageURL"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4123,21 +4123,6 @@ func (ec *executionContext) marshalNCurso2ᚖproyectoIngesoCursosᚋgraphᚋmode
 		return graphql.Null
 	}
 	return ec._Curso(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
-	res, err := graphql.UnmarshalFloatContext(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
-	res := graphql.MarshalFloatContext(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return graphql.WrapContextMarshaler(ctx, res)
 }
 
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {

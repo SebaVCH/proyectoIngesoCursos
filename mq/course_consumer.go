@@ -91,8 +91,8 @@ func StartCourseConsumer() error {
 
 				// Responder con el precio y la foto del curso
 				response := struct {
-					Price    float64 `json:"price"`
-					ImageURL string  `json:"image_url"`
+					Price    int    `json:"price"`
+					ImageURL string `json:"image_url"`
 				}{
 					Price:    curso.Price,
 					ImageURL: curso.ImageURL,

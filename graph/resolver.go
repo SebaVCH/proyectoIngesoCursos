@@ -32,7 +32,7 @@ func (r *Resolver) Curso(ctx context.Context, courseID string) (*models.Curso, e
 }
 
 // Crear un nuevo curso
-func (r *Resolver) CreateCurso(ctx context.Context, title, description string, price float64, category, imageURL string, instructorName string) (*model.Curso, error) {
+func (r *Resolver) CreateCurso(ctx context.Context, title, description string, price int, category, imageURL string, instructorName string) (*model.Curso, error) {
 	// Crear el modelo del curso para la base de datos
 	cursoDB := models.Curso{
 		InstructorName: instructorName,
@@ -63,7 +63,7 @@ func (r *Resolver) CreateCurso(ctx context.Context, title, description string, p
 }
 
 // Actualizar un curso por su ID
-func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID int, title, description string, price float64, category, imageURL string) (*models.Curso, error) {
+func (r *Resolver) UpdateCursoByID(ctx context.Context, courseID int, title, description string, price int, category, imageURL string) (*models.Curso, error) {
 	var curso models.Curso
 
 	// Buscar el curso por ID
